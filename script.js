@@ -132,7 +132,7 @@ function renderList() {
 
     const amount = document.createElement("p");
     amount.className = "expense-item__amount";
-    amount.textContent = `${formatAmount(expense.amountCents)} ₽`;
+    amount.textContent = `${formatAmount(expense.amountCents)} ₸`;
 
     const details = document.createElement("p");
     details.className = "expense-item__details";
