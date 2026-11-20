@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Простой учёт личных расходов в браузере">
+    <title>Мои расходы</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="page__header">
+        <p class="eyebrow">Личный бюджет</p>
+        <h1>Мои расходы</h1>
+        <p class="subtitle">Добавляйте траты — данные останутся только на этом устройстве.</p>
+      </header>
+
+      <section class="card" aria-labelledby="form-title">
+        <h2 id="form-title">Новая трата</h2>
+
+        <form id="expense-form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="amount">Сумма</label>
+              <div class="amount-field">
+                <input
+                  id="amount"
+                  name="amount"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  placeholder="0,00"
+                  aria-describedby="amount-hint amount-error"
+                  required
+                >
+                <span aria-hidden="true">₽</span>
+              </div>
+              <small id="amount-hint">Например, 1250,50</small>
+              <p class="field-error" id="amount-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="category">Категория</label>
+              <select id="category" name="category" aria-describedby="category-error" required>
+                <option value="">Выберите категорию</option>
+                <option value="Еда">Еда</option>
+                <option value="Транспорт">Транспорт</option>
+                <option value="Дом">Дом</option>
+                <option value="Другое">Другое</option>
+              </select>
+              <p class="field-error" id="category-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="date">Дата</label>
+              <input id="date" name="date" type="date" aria-describedby="date-error" required>
+              <p class="field-error" id="date-error"></p>
+            </div>
+
+            <div class="field field--wide">
+              <label for="comment">Комментарий <span>(необязательно)</span></label>
+              <input
+                id="comment"
+                name="comment"
+                type="text"
+                maxlength="200"
+                autocomplete="off"
+                placeholder="Например, продукты на неделю"
+              >
+            </div>
+          </div>
+
+          <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Добавить</button>
+        </form>
+      </section>
+
+      <section class="expenses-section" aria-labelledby="expenses-title">
+        <div class="summary card">
+          <div>
+            <p class="summary__label">За текущий месяц</p>
+            <p class="summary__month" id="current-month"></p>
+          </div>
+          <p class="summary__amount"><span id="month-total">0,00</span> ₽</p>
+        </div>
+
+        <div class="list-header">
+          <h2 id="expenses-title">Список трат</h2>
+          <div class="period-filter" aria-label="Показать траты за период">
+            <button class="filter-button is-active" type="button" data-period="all" aria-pressed="true">Все</button>
+            <button class="filter-button" type="button" data-period="day" aria-pressed="false">Сутки</button>
+            <button class="filter-button" type="button" data-period="7days" aria-pressed="false">7 дней</button>
+            <button class="filter-button" type="button" data-period="14days" aria-pressed="false">14 дней</button>
+            <button class="filter-button" type="button" data-period="month" aria-pressed="false">Месяц</button>
+          </div>
+        </div>
+
+        <p class="storage-warning" id="storage-warning" role="alert" hidden>
+          Не удалось открыть хранилище браузера. Новые траты не сохранятся после F5.
+        </p>
+        <ul class="expense-list" id="expense-list"></ul>
+        <p class="empty-state" id="empty-state">Трат пока нет.</p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
