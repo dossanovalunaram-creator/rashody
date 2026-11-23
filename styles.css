@@ -400,6 +400,24 @@ select[aria-invalid="true"] {
   color: #9aa4ab;
 }
 
+.expense-item__delete {
+  grid-column: 1 / -1;
+  justify-self: end;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid #d8aaa5;
+  border-radius: 10px;
+  background: #fff;
+  color: #9b2c22;
+  font-weight: 700;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.expense-item__delete:hover {
+  border-color: #b42318;
+  background: #fff4f2;
+}
+
 .empty-state,
 .storage-warning {
   margin: 0;
@@ -495,6 +513,12 @@ select[aria-invalid="true"] {
     grid-row: auto;
     grid-column: auto;
     justify-self: start;
+  }
+
+  .expense-item__delete {
+    grid-column: auto;
+    justify-self: stretch;
+    width: 100%;
   }
 }
 

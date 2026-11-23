@@ -263,7 +263,17 @@ function renderList() {
       details.append(comment);
     }
 
-    item.append(category, amount, details);
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "expense-item__delete";
+    deleteButton.type = "button";
+    deleteButton.textContent = "Удалить";
+    deleteButton.setAttribute(
+      "aria-label",
+      `Удалить трату ${formatAmount(expense.amountCents)} ₸, ${expense.category}, ${formatDate(expense.date)}`
+    );
+    deleteButton.addEventListener("click", () => deleteExpense(expense));
+
+    item.append(category, amount, details, deleteButton);
     expenseList.append(item);
   }
 
@@ -271,6 +281,20 @@ function renderList() {
   emptyState.textContent = expenses.length === 0
     ? "Трат пока нет."
     : "За выбранный период трат нет.";
+}
+
+function deleteExpense(expense) {
+  const shouldDelete = window.confirm(
+    `Удалить трату ${formatAmount(expense.amountCents)} ₸ в категории «${expense.category}»?`
+  );
+
+  if (!shouldDelete) {
+    return;
+  }
+
+  expenses = expenses.filter((item) => item.id !== expense.id);
+  saveExpenses();
+  render();
 }
 
 function matchesActivePeriod(expense) {
