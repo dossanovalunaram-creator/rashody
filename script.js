@@ -4,6 +4,12 @@ const STORAGE_KEY = "rashody.expenses.v1";
 const BUDGET_STORAGE_KEY = "rashody.budget.v1";
 const CATEGORIES = new Set(["Еда", "Транспорт", "Дом", "Другое"]);
 const BUDGET_FIELDS = ["food", "transport", "home", "other"];
+const BUDGET_CATEGORIES = {
+  food: "Еда",
+  transport: "Транспорт",
+  home: "Дом",
+  other: "Другое"
+};
 
 const form = document.querySelector("#expense-form");
 const amountInput = document.querySelector("#amount");
@@ -24,6 +30,15 @@ const budgetInputs = Object.fromEntries(BUDGET_FIELDS.map((field) => [
 ]));
 const budgetMessage = document.querySelector("#budget-message");
 const budgetTotal = document.querySelector("#budget-total");
+const budgetStatus = Object.fromEntries(BUDGET_FIELDS.map((field) => [
+  field,
+  {
+    spent: document.querySelector(`#budget-${field}-spent`),
+    balance: document.querySelector(`#budget-${field}-balance`),
+    balanceLabel: document.querySelector(`#budget-${field}-balance-label`),
+    balanceRow: document.querySelector(`#budget-${field}-balance-row`)
+  }
+]));
 
 let expenses = loadExpenses();
 let budget = loadBudget();
@@ -69,6 +84,7 @@ budgetForm.addEventListener("submit", (event) => {
   budget = nextBudget;
   saveBudget();
   renderBudgetTotal();
+  renderBudgetStatus();
   budgetMessage.textContent = "Лимиты сохранены.";
 });
 
@@ -139,6 +155,7 @@ for (const button of filterButtons) {
 
 function render() {
   renderMonthTotal();
+  renderBudgetStatus();
   renderList();
 }
 
@@ -178,6 +195,41 @@ function renderBudgetTotal() {
   }, 0);
 
   budgetTotal.textContent = formatAmount(totalCents);
+}
+
+function renderBudgetStatus() {
+  const spending = getCurrentMonthSpendingByCategory();
+
+  for (const field of BUDGET_FIELDS) {
+    const status = budgetStatus[field];
+    const spentCents = spending[BUDGET_CATEGORIES[field]];
+    const balanceCents = (budget[field] || 0) - spentCents;
+    const isOverBudget = balanceCents < 0;
+
+    status.spent.textContent = formatAmount(spentCents);
+    status.balance.textContent = formatAmount(Math.abs(balanceCents));
+    status.balanceLabel.textContent = isOverBudget ? "Перерасход" : "Осталось";
+    status.balanceRow.classList.toggle("is-over-budget", isOverBudget);
+  }
+}
+
+function getCurrentMonthSpendingByCategory() {
+  const now = new Date();
+  const spending = Object.fromEntries(Array.from(CATEGORIES, (category) => [category, 0]));
+
+  for (const expense of expenses) {
+    const expenseDate = parseLocalDate(expense.date);
+
+    if (
+      expenseDate &&
+      expenseDate.getFullYear() === now.getFullYear() &&
+      expenseDate.getMonth() === now.getMonth()
+    ) {
+      spending[expense.category] += expense.amountCents;
+    }
+  }
+
+  return spending;
 }
 
 function renderList() {

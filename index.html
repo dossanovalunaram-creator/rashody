@@ -89,40 +89,56 @@
 
         <form id="budget-form" novalidate>
           <div class="budget-grid">
-            <div class="field">
+            <div class="field budget-category">
               <label for="budget-food">Еда</label>
               <div class="amount-field">
                 <input id="budget-food" name="food" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-food-error" required>
                 <span aria-hidden="true">₸</span>
               </div>
               <p class="field-error" id="budget-food-error"></p>
+              <div class="budget-category__status" aria-live="polite">
+                <p><span>Потрачено</span><strong><span id="budget-food-spent">0,00</span> ₸</strong></p>
+                <p id="budget-food-balance-row"><span id="budget-food-balance-label">Осталось</span><strong><span id="budget-food-balance">0,00</span> ₸</strong></p>
+              </div>
             </div>
 
-            <div class="field">
+            <div class="field budget-category">
               <label for="budget-transport">Транспорт</label>
               <div class="amount-field">
                 <input id="budget-transport" name="transport" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-transport-error" required>
                 <span aria-hidden="true">₸</span>
               </div>
               <p class="field-error" id="budget-transport-error"></p>
+              <div class="budget-category__status" aria-live="polite">
+                <p><span>Потрачено</span><strong><span id="budget-transport-spent">0,00</span> ₸</strong></p>
+                <p id="budget-transport-balance-row"><span id="budget-transport-balance-label">Осталось</span><strong><span id="budget-transport-balance">0,00</span> ₸</strong></p>
+              </div>
             </div>
 
-            <div class="field">
+            <div class="field budget-category">
               <label for="budget-home">Дом</label>
               <div class="amount-field">
                 <input id="budget-home" name="home" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-home-error" required>
                 <span aria-hidden="true">₸</span>
               </div>
               <p class="field-error" id="budget-home-error"></p>
+              <div class="budget-category__status" aria-live="polite">
+                <p><span>Потрачено</span><strong><span id="budget-home-spent">0,00</span> ₸</strong></p>
+                <p id="budget-home-balance-row"><span id="budget-home-balance-label">Осталось</span><strong><span id="budget-home-balance">0,00</span> ₸</strong></p>
+              </div>
             </div>
 
-            <div class="field">
+            <div class="field budget-category">
               <label for="budget-other">Другое</label>
               <div class="amount-field">
                 <input id="budget-other" name="other" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-other-error" required>
                 <span aria-hidden="true">₸</span>
               </div>
               <p class="field-error" id="budget-other-error"></p>
+              <div class="budget-category__status" aria-live="polite">
+                <p><span>Потрачено</span><strong><span id="budget-other-spent">0,00</span> ₸</strong></p>
+                <p id="budget-other-balance-row"><span id="budget-other-balance-label">Осталось</span><strong><span id="budget-other-balance">0,00</span> ₸</strong></p>
+              </div>
             </div>
           </div>
 
