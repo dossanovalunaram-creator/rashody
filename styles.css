@@ -455,6 +455,10 @@ select[aria-invalid="true"] {
 }
 
 @media (max-width: 420px) {
+  .budget-category {
+    padding: 14px;
+  }
+
   .budget-header {
     display: block;
   }
@@ -462,6 +466,17 @@ select[aria-invalid="true"] {
   .budget-total {
     margin-top: 14px;
     text-align: left;
+  }
+
+  .budget-category__status p {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .budget-category__status strong {
+    max-width: 100%;
+    white-space: normal;
   }
 
   .summary {
