@@ -1,7 +1,9 @@
 "use strict";
 
 const STORAGE_KEY = "rashody.expenses.v1";
+const BUDGET_STORAGE_KEY = "rashody.budget.v1";
 const CATEGORIES = new Set(["Еда", "Транспорт", "Дом", "Другое"]);
+const BUDGET_FIELDS = ["food", "transport", "home", "other"];
 
 const form = document.querySelector("#expense-form");
 const amountInput = document.querySelector("#amount");
@@ -15,8 +17,16 @@ const monthTotal = document.querySelector("#month-total");
 const currentMonth = document.querySelector("#current-month");
 const storageWarning = document.querySelector("#storage-warning");
 const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
+const budgetForm = document.querySelector("#budget-form");
+const budgetInputs = Object.fromEntries(BUDGET_FIELDS.map((field) => [
+  field,
+  document.querySelector(`#budget-${field}`)
+]));
+const budgetMessage = document.querySelector("#budget-message");
+const budgetTotal = document.querySelector("#budget-total");
 
 let expenses = loadExpenses();
+let budget = loadBudget();
 let activePeriod = "all";
 
 dateInput.value = toDateInputValue(new Date());
@@ -25,7 +35,42 @@ currentMonth.textContent = new Intl.DateTimeFormat("ru-RU", {
   year: "numeric"
 }).format(new Date());
 
+fillBudgetForm();
+renderBudgetTotal();
 render();
+
+budgetForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  clearBudgetErrors();
+
+  const nextBudget = {};
+  let firstInvalidField = null;
+
+  for (const field of BUDGET_FIELDS) {
+    const input = budgetInputs[field];
+    const amountCents = parseAmountToCents(input.value);
+
+    if (amountCents === null) {
+      showError(input, "Введите сумму больше нуля, не более двух знаков после запятой.");
+      firstInvalidField ||= input;
+      continue;
+    }
+
+    nextBudget[field] = amountCents;
+  }
+
+  if (firstInvalidField) {
+    budgetMessage.textContent = "Проверьте лимиты.";
+    budgetMessage.classList.add("is-error");
+    firstInvalidField.focus();
+    return;
+  }
+
+  budget = nextBudget;
+  saveBudget();
+  renderBudgetTotal();
+  budgetMessage.textContent = "Лимиты сохранены.";
+});
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -116,6 +161,23 @@ function renderMonthTotal() {
   }, 0);
 
   monthTotal.textContent = formatAmount(totalCents);
+}
+
+function fillBudgetForm() {
+  for (const field of BUDGET_FIELDS) {
+    const amountCents = budget[field];
+    budgetInputs[field].value = Number.isSafeInteger(amountCents)
+      ? formatAmount(amountCents)
+      : "";
+  }
+}
+
+function renderBudgetTotal() {
+  const totalCents = BUDGET_FIELDS.reduce((total, field) => {
+    return total + (budget[field] || 0);
+  }, 0);
+
+  budgetTotal.textContent = formatAmount(totalCents);
 }
 
 function renderList() {
@@ -270,6 +332,17 @@ function clearErrors() {
   }
 }
 
+function clearBudgetErrors() {
+  budgetMessage.textContent = "";
+  budgetMessage.classList.remove("is-error");
+
+  for (const field of BUDGET_FIELDS) {
+    const input = budgetInputs[field];
+    input.removeAttribute("aria-invalid");
+    document.querySelector(`#${input.id}-error`).textContent = "";
+  }
+}
+
 function createId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
@@ -305,6 +378,39 @@ function saveExpenses() {
   } catch (error) {
     showStorageWarning();
   }
+}
+
+function loadBudget() {
+  try {
+    const storedValue = localStorage.getItem(BUDGET_STORAGE_KEY);
+
+    if (!storedValue) {
+      return {};
+    }
+
+    const parsedValue = JSON.parse(storedValue);
+    return isStoredBudget(parsedValue) ? parsedValue : {};
+  } catch (error) {
+    showStorageWarning();
+    return {};
+  }
+}
+
+function saveBudget() {
+  try {
+    localStorage.setItem(BUDGET_STORAGE_KEY, JSON.stringify(budget));
+  } catch (error) {
+    showStorageWarning();
+  }
+}
+
+function isStoredBudget(value) {
+  return Boolean(
+    value &&
+    BUDGET_FIELDS.every((field) => (
+      Number.isSafeInteger(value[field]) && value[field] > 0
+    ))
+  );
 }
 
 function isStoredExpense(expense) {

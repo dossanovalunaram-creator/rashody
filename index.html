@@ -75,6 +75,62 @@
         </form>
       </section>
 
+      <section class="card budget-section" aria-labelledby="budget-title">
+        <div class="budget-header">
+          <div>
+            <h2 id="budget-title">Бюджет месяца</h2>
+            <p class="budget-hint">Укажите лимиты по категориям.</p>
+          </div>
+          <p class="budget-total">
+            <span>Общий бюджет</span>
+            <strong><span id="budget-total">0,00</span> ₸</strong>
+          </p>
+        </div>
+
+        <form id="budget-form" novalidate>
+          <div class="budget-grid">
+            <div class="field">
+              <label for="budget-food">Еда</label>
+              <div class="amount-field">
+                <input id="budget-food" name="food" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-food-error" required>
+                <span aria-hidden="true">₸</span>
+              </div>
+              <p class="field-error" id="budget-food-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="budget-transport">Транспорт</label>
+              <div class="amount-field">
+                <input id="budget-transport" name="transport" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-transport-error" required>
+                <span aria-hidden="true">₸</span>
+              </div>
+              <p class="field-error" id="budget-transport-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="budget-home">Дом</label>
+              <div class="amount-field">
+                <input id="budget-home" name="home" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-home-error" required>
+                <span aria-hidden="true">₸</span>
+              </div>
+              <p class="field-error" id="budget-home-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="budget-other">Другое</label>
+              <div class="amount-field">
+                <input id="budget-other" name="other" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-other-error" required>
+                <span aria-hidden="true">₸</span>
+              </div>
+              <p class="field-error" id="budget-other-error"></p>
+            </div>
+          </div>
+
+          <p class="form-message" id="budget-message" role="status" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Сохранить лимиты</button>
+        </form>
+      </section>
+
       <section class="expenses-section" aria-labelledby="expenses-title">
         <div class="summary card">
           <div>

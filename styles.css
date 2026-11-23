@@ -200,6 +200,50 @@ select[aria-invalid="true"] {
   transform: translateY(1px);
 }
 
+.budget-section {
+  margin-top: 28px;
+}
+
+.budget-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.budget-hint {
+  margin: 7px 0 0;
+  color: #6b7781;
+  font-size: 0.9rem;
+}
+
+.budget-total {
+  flex: none;
+  margin: 0;
+  text-align: right;
+}
+
+.budget-total > span {
+  display: block;
+  color: #587168;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.budget-total strong {
+  display: block;
+  margin-top: 4px;
+  color: #164f40;
+  font-size: 1.25rem;
+}
+
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 18px;
+  margin-top: 22px;
+}
+
 .expenses-section {
   margin-top: 28px;
 }
@@ -357,6 +401,10 @@ select[aria-invalid="true"] {
     gap: 4px;
   }
 
+  .budget-grid {
+    grid-template-columns: 1fr;
+  }
+
   .field--wide {
     grid-column: auto;
   }
@@ -372,6 +420,15 @@ select[aria-invalid="true"] {
 }
 
 @media (max-width: 420px) {
+  .budget-header {
+    display: block;
+  }
+
+  .budget-total {
+    margin-top: 14px;
+    text-align: left;
+  }
+
   .summary {
     display: block;
   }
