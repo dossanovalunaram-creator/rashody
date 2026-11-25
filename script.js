@@ -129,8 +129,15 @@ form.addEventListener("submit", (event) => {
     createdAt: Date.now()
   };
 
-  expenses.unshift(expense);
-  saveExpenses();
+  const nextExpenses = [expense, ...expenses];
+
+  if (!saveExpenses(nextExpenses)) {
+    formMessage.textContent = "Трата не сохранена. Разрешите браузеру хранить данные и попробуйте снова.";
+    formMessage.classList.add("is-error");
+    return;
+  }
+
+  expenses = nextExpenses;
   render();
 
   form.reset();
@@ -458,11 +465,13 @@ function loadExpenses() {
   }
 }
 
-function saveExpenses() {
+function saveExpenses(nextExpenses = expenses) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextExpenses));
+    return true;
   } catch (error) {
     showStorageWarning();
+    return false;
   }
 }
 
