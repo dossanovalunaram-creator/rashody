@@ -171,13 +171,13 @@ function renderMonthTotal() {
       expenseDate.getFullYear() === currentYear &&
       expenseDate.getMonth() === currentMonthIndex
     ) {
-      return total + expense.amountCents;
+      return total + BigInt(expense.amountCents);
     }
 
     return total;
-  }, 0);
+  }, 0n);
 
-  monthTotal.textContent = formatAmount(totalCents);
+  monthTotal.textContent = formatBigIntAmount(totalCents);
 }
 
 function fillBudgetForm() {
@@ -191,10 +191,10 @@ function fillBudgetForm() {
 
 function renderBudgetTotal() {
   const totalCents = BUDGET_FIELDS.reduce((total, field) => {
-    return total + (budget[field] || 0);
-  }, 0);
+    return total + BigInt(budget[field] || 0);
+  }, 0n);
 
-  budgetTotal.textContent = formatAmount(totalCents);
+  budgetTotal.textContent = formatBigIntAmount(totalCents);
 }
 
 function renderBudgetStatus() {
@@ -341,6 +341,16 @@ function formatAmount(amountCents) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(amountCents / 100);
+}
+
+function formatBigIntAmount(amountCents) {
+  const isNegative = amountCents < 0n;
+  const absoluteCents = isNegative ? -amountCents : amountCents;
+  const wholePart = absoluteCents / 100n;
+  const fractionPart = String(absoluteCents % 100n).padStart(2, "0");
+  const formattedWholePart = new Intl.NumberFormat("ru-RU").format(wholePart);
+
+  return `${isNegative ? "-" : ""}${formattedWholePart},${fractionPart}`;
 }
 
 function formatDate(dateValue) {
