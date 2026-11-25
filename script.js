@@ -299,7 +299,7 @@ function deleteExpense(expense) {
     return;
   }
 
-  expenses = expenses.filter((item) => item.id !== expense.id);
+  expenses = expenses.filter((item) => item !== expense);
   saveExpenses();
   render();
 }
