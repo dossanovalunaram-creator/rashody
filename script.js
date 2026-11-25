@@ -324,7 +324,7 @@ function matchesActivePeriod(expense) {
 }
 
 function parseAmountToCents(rawValue) {
-  const normalized = rawValue.trim().replace(/\s/g, "").replace(",", ".");
+  const normalized = rawValue.trim().replace(",", ".");
 
   if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) {
     return null;
