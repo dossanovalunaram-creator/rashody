@@ -27,6 +27,9 @@ const reportMonth = document.querySelector("#report-month");
 const reportTotal = document.querySelector("#report-total");
 const reportTopCategories = document.querySelector("#report-top-categories");
 const reportEmpty = document.querySelector("#report-empty");
+const reportPreviousMonth = document.querySelector("#report-previous-month");
+const reportPreviousTotal = document.querySelector("#report-previous-total");
+const reportDifference = document.querySelector("#report-difference");
 const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
 const budgetForm = document.querySelector("#budget-form");
 const budgetInputs = Object.fromEntries(BUDGET_FIELDS.map((field) => [
@@ -195,9 +198,15 @@ function renderMonthTotal() {
 }
 
 function renderMonthlyReport() {
-  const spending = getCurrentMonthSpendingByCategoryAsBigInt();
+  const now = new Date();
+  const previousMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const spending = getMonthSpendingByCategoryAsBigInt(now);
+  const previousSpending = getMonthSpendingByCategoryAsBigInt(previousMonthDate);
   const totalCents = CATEGORY_ORDER.reduce((total, category) => {
     return total + spending[category];
+  }, 0n);
+  const previousTotalCents = CATEGORY_ORDER.reduce((total, category) => {
+    return total + previousSpending[category];
   }, 0n);
   const topCategories = CATEGORY_ORDER
     .map((category, order) => ({ category, order, amountCents: spending[category] }))
@@ -227,10 +236,15 @@ function renderMonthlyReport() {
 
   reportTopCategories.hidden = topCategories.length === 0;
   reportEmpty.hidden = topCategories.length > 0;
+  reportPreviousMonth.textContent = new Intl.DateTimeFormat("ru-RU", {
+    month: "long",
+    year: "numeric"
+  }).format(previousMonthDate);
+  reportPreviousTotal.textContent = formatBigIntAmount(previousTotalCents);
+  reportDifference.textContent = formatMonthlyDifference(totalCents, previousTotalCents);
 }
 
-function getCurrentMonthSpendingByCategoryAsBigInt() {
-  const now = new Date();
+function getMonthSpendingByCategoryAsBigInt(monthDate) {
   const spending = Object.fromEntries(CATEGORY_ORDER.map((category) => [category, 0n]));
 
   for (const expense of expenses) {
@@ -238,14 +252,35 @@ function getCurrentMonthSpendingByCategoryAsBigInt() {
 
     if (
       expenseDate &&
-      expenseDate.getFullYear() === now.getFullYear() &&
-      expenseDate.getMonth() === now.getMonth()
+      expenseDate.getFullYear() === monthDate.getFullYear() &&
+      expenseDate.getMonth() === monthDate.getMonth()
     ) {
       spending[expense.category] += BigInt(expense.amountCents);
     }
   }
 
   return spending;
+}
+
+function formatMonthlyDifference(currentTotalCents, previousTotalCents) {
+  if (previousTotalCents === 0n) {
+    return currentTotalCents === 0n
+      ? "В обоих месяцах расходов не было."
+      : "В прошлом месяце расходов не было.";
+  }
+
+  const differenceCents = currentTotalCents - previousTotalCents;
+  const absoluteDifferenceCents = differenceCents < 0n ? -differenceCents : differenceCents;
+  const percentage = (absoluteDifferenceCents * 100n + previousTotalCents / 2n) / previousTotalCents;
+
+  if (differenceCents === 0n) {
+    return "Без изменений: 0,00 ₸ (0%).";
+  }
+
+  const direction = differenceCents > 0n ? "больше" : "меньше";
+  const percentageSign = differenceCents > 0n ? "+" : "−";
+
+  return `На ${formatBigIntAmount(absoluteDifferenceCents)} ₸ ${direction} прошлого месяца (${percentageSign}${percentage}%).`;
 }
 
 function fillBudgetForm() {

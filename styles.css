@@ -385,6 +385,35 @@ select[aria-invalid="true"] {
   text-align: center;
 }
 
+.monthly-report__comparison {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #e1e6ea;
+}
+
+.monthly-report__previous,
+.monthly-report__difference {
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+.monthly-report__previous {
+  color: #58656f;
+}
+
+.monthly-report__previous strong {
+  color: #26343d;
+  white-space: nowrap;
+}
+
+.monthly-report__difference {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f1f7f5;
+  color: #205f50;
+  font-weight: 700;
+}
+
 .expenses-section {
   margin-top: 28px;
 }
