@@ -65,6 +65,11 @@ h2 {
   font-size: 1.25rem;
 }
 
+h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
 .subtitle {
   max-width: 560px;
   margin: 12px 0 0;
@@ -277,6 +282,107 @@ select[aria-invalid="true"] {
 .budget-category__status .is-over-budget strong {
   color: #b42318;
   font-weight: 750;
+}
+
+.monthly-report {
+  margin-top: 28px;
+}
+
+.monthly-report__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.monthly-report__eyebrow {
+  margin: 0 0 5px;
+  color: #26715e;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.monthly-report__month {
+  margin: 7px 0 0;
+  color: #6b7781;
+  font-size: 0.9rem;
+}
+
+.monthly-report__total {
+  flex: none;
+  margin: 0;
+  text-align: right;
+}
+
+.monthly-report__total > span {
+  display: block;
+  color: #587168;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.monthly-report__total strong {
+  display: block;
+  margin-top: 4px;
+  color: #164f40;
+  font-size: clamp(1.35rem, 5vw, 1.8rem);
+  white-space: nowrap;
+}
+
+.monthly-report__categories {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #e1e6ea;
+}
+
+.monthly-report__list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: report-rank;
+}
+
+.monthly-report__list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #e0e5e8;
+  border-radius: 12px;
+  background: #f8faf9;
+  counter-increment: report-rank;
+}
+
+.monthly-report__list li::before {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: #dceee8;
+  color: #205f50;
+  content: counter(report-rank);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.monthly-report__list strong {
+  white-space: nowrap;
+}
+
+.monthly-report__empty {
+  margin: 14px 0 0;
+  padding: 16px;
+  border: 1px dashed #ccd4d9;
+  border-radius: 12px;
+  color: #66727b;
+  text-align: center;
 }
 
 .expenses-section {
@@ -503,6 +609,24 @@ select[aria-invalid="true"] {
 
   .summary__amount {
     margin-top: 12px;
+  }
+
+  .monthly-report__header {
+    display: block;
+  }
+
+  .monthly-report__total {
+    margin-top: 14px;
+    text-align: left;
+  }
+
+  .monthly-report__list li {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .monthly-report__list strong {
+    grid-column: 2;
+    white-space: normal;
   }
 
   .expense-item {

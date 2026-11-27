@@ -10,6 +10,7 @@ const BUDGET_CATEGORIES = {
   home: "Дом",
   other: "Другое"
 };
+const CATEGORY_ORDER = Array.from(CATEGORIES);
 
 const form = document.querySelector("#expense-form");
 const amountInput = document.querySelector("#amount");
@@ -22,6 +23,10 @@ const emptyState = document.querySelector("#empty-state");
 const monthTotal = document.querySelector("#month-total");
 const currentMonth = document.querySelector("#current-month");
 const storageWarning = document.querySelector("#storage-warning");
+const reportMonth = document.querySelector("#report-month");
+const reportTotal = document.querySelector("#report-total");
+const reportTopCategories = document.querySelector("#report-top-categories");
+const reportEmpty = document.querySelector("#report-empty");
 const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
 const budgetForm = document.querySelector("#budget-form");
 const budgetInputs = Object.fromEntries(BUDGET_FIELDS.map((field) => [
@@ -49,6 +54,7 @@ currentMonth.textContent = new Intl.DateTimeFormat("ru-RU", {
   month: "long",
   year: "numeric"
 }).format(new Date());
+reportMonth.textContent = currentMonth.textContent;
 
 fillBudgetForm();
 renderBudgetTotal();
@@ -162,6 +168,7 @@ for (const button of filterButtons) {
 
 function render() {
   renderMonthTotal();
+  renderMonthlyReport();
   renderBudgetStatus();
   renderList();
 }
@@ -185,6 +192,60 @@ function renderMonthTotal() {
   }, 0n);
 
   monthTotal.textContent = formatBigIntAmount(totalCents);
+}
+
+function renderMonthlyReport() {
+  const spending = getCurrentMonthSpendingByCategoryAsBigInt();
+  const totalCents = CATEGORY_ORDER.reduce((total, category) => {
+    return total + spending[category];
+  }, 0n);
+  const topCategories = CATEGORY_ORDER
+    .map((category, order) => ({ category, order, amountCents: spending[category] }))
+    .filter((item) => item.amountCents > 0n)
+    .sort((first, second) => {
+      if (first.amountCents === second.amountCents) {
+        return first.order - second.order;
+      }
+
+      return first.amountCents > second.amountCents ? -1 : 1;
+    })
+    .slice(0, 3);
+
+  reportTotal.textContent = formatBigIntAmount(totalCents);
+  reportTopCategories.replaceChildren();
+
+  for (const item of topCategories) {
+    const listItem = document.createElement("li");
+    const category = document.createElement("span");
+    const amount = document.createElement("strong");
+
+    category.textContent = item.category;
+    amount.textContent = formatBigIntAmount(item.amountCents) + " ₸";
+    listItem.append(category, amount);
+    reportTopCategories.append(listItem);
+  }
+
+  reportTopCategories.hidden = topCategories.length === 0;
+  reportEmpty.hidden = topCategories.length > 0;
+}
+
+function getCurrentMonthSpendingByCategoryAsBigInt() {
+  const now = new Date();
+  const spending = Object.fromEntries(CATEGORY_ORDER.map((category) => [category, 0n]));
+
+  for (const expense of expenses) {
+    const expenseDate = parseLocalDate(expense.date);
+
+    if (
+      expenseDate &&
+      expenseDate.getFullYear() === now.getFullYear() &&
+      expenseDate.getMonth() === now.getMonth()
+    ) {
+      spending[expense.category] += BigInt(expense.amountCents);
+    }
+  }
+
+  return spending;
 }
 
 function fillBudgetForm() {

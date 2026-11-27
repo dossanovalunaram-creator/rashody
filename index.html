@@ -147,6 +147,26 @@
         </form>
       </section>
 
+      <section class="card monthly-report" aria-labelledby="monthly-report-title">
+        <div class="monthly-report__header">
+          <div>
+            <p class="monthly-report__eyebrow">Текущий месяц</p>
+            <h2 id="monthly-report-title">Отчёт за месяц</h2>
+            <p class="monthly-report__month" id="report-month"></p>
+          </div>
+          <p class="monthly-report__total">
+            <span>Итого</span>
+            <strong><span id="report-total">0,00</span> ₸</strong>
+          </p>
+        </div>
+
+        <div class="monthly-report__categories">
+          <h3>Самые затратные категории</h3>
+          <ol class="monthly-report__list" id="report-top-categories"></ol>
+          <p class="monthly-report__empty" id="report-empty">В этом месяце трат пока нет.</p>
+        </div>
+      </section>
+
       <section class="expenses-section" aria-labelledby="expenses-title">
         <div class="summary card">
           <div>
