@@ -50,7 +50,20 @@ const budgetStatus = Object.fromEntries(BUDGET_FIELDS.map((field) => [
     spent: document.querySelector(`#budget-${field}-spent`),
     balance: document.querySelector(`#budget-${field}-balance`),
     balanceLabel: document.querySelector(`#budget-${field}-balance-label`),
-    balanceRow: document.querySelector(`#budget-${field}-balance-row`)
+    balanceRow: document.querySelector(`#budget-${field}-balance-row`),
+    progress: document.querySelector(`#budget-${field}-progress`),
+    progressBar: document.querySelector(`#budget-${field}-progress-bar`),
+    progressLabel: document.querySelector(`#budget-${field}-progress-label`)
+  }
+]));
+const categoryAnalyticsEmpty = document.querySelector("#category-analytics-empty");
+const categoryAnalyticsList = document.querySelector("#category-analytics-list");
+const categoryAnalytics = Object.fromEntries(BUDGET_FIELDS.map((field) => [
+  field,
+  {
+    amount: document.querySelector(`#analytics-${field}-amount`),
+    percent: document.querySelector(`#analytics-${field}-percent`),
+    bar: document.querySelector(`#analytics-${field}-bar`)
   }
 ]));
 
@@ -193,6 +206,7 @@ function render() {
   renderOverview();
   renderMonthlyReport();
   renderBudgetStatus();
+  renderCategoryAnalytics();
   renderList();
 }
 
@@ -371,19 +385,51 @@ function renderBudgetTotal() {
 }
 
 function renderBudgetStatus() {
-  const spending = getCurrentMonthSpendingByCategory();
+  const spending = getMonthSpendingByCategoryAsBigInt(new Date());
 
   for (const field of BUDGET_FIELDS) {
     const status = budgetStatus[field];
     const spentCents = spending[BUDGET_CATEGORIES[field]];
-    const balanceCents = (budget[field] || 0) - spentCents;
-    const isOverBudget = balanceCents < 0;
+    const limitCents = BigInt(budget[field] || 0);
+    const balanceCents = limitCents - spentCents;
+    const isOverBudget = balanceCents < 0n;
+    const usedPercent = limitCents > 0n
+      ? (spentCents * 100n + limitCents / 2n) / limitCents
+      : 0n;
+    const cappedPercent = usedPercent > 100n ? 100 : Number(usedPercent);
 
-    status.spent.textContent = formatAmount(spentCents);
-    status.balance.textContent = formatAmount(Math.abs(balanceCents));
+    status.spent.textContent = formatBigIntAmount(spentCents);
+    status.balance.textContent = formatBigIntAmount(isOverBudget ? -balanceCents : balanceCents);
     status.balanceLabel.textContent = isOverBudget ? "Перерасход" : "Осталось";
     status.balanceRow.classList.toggle("is-over-budget", isOverBudget);
+    status.progressBar.style.width = `${cappedPercent}%`;
+    status.progress.setAttribute("aria-valuenow", String(cappedPercent));
+    status.progress.classList.toggle("is-warning", !isOverBudget && usedPercent >= 80n);
+    status.progress.classList.toggle("is-over-budget", isOverBudget);
+    status.progressLabel.textContent = `Использовано ${usedPercent}%`;
   }
+}
+
+function renderCategoryAnalytics() {
+  const spending = getMonthSpendingByCategoryAsBigInt(new Date());
+  const totalCents = CATEGORY_ORDER.reduce((total, category) => {
+    return total + spending[category];
+  }, 0n);
+
+  for (const field of BUDGET_FIELDS) {
+    const analytics = categoryAnalytics[field];
+    const amountCents = spending[BUDGET_CATEGORIES[field]];
+    const percent = totalCents > 0n
+      ? (amountCents * 100n + totalCents / 2n) / totalCents
+      : 0n;
+
+    analytics.amount.textContent = formatBigIntAmount(amountCents);
+    analytics.percent.textContent = String(percent);
+    analytics.bar.style.width = `${Number(percent)}%`;
+  }
+
+  categoryAnalyticsEmpty.hidden = totalCents > 0n;
+  categoryAnalyticsList.hidden = totalCents === 0n;
 }
 
 function getCurrentMonthSpendingByCategory() {

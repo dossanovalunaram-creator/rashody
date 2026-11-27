@@ -107,7 +107,7 @@
 
         <form id="budget-form" novalidate>
           <div class="budget-grid">
-            <div class="field budget-category">
+            <div class="field budget-category budget-category--food">
               <label for="budget-food">Еда</label>
               <div class="amount-field">
                 <input id="budget-food" name="food" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-food-error" required>
@@ -118,9 +118,13 @@
                 <p><span>Потрачено</span><strong><span id="budget-food-spent">0,00</span> ₸</strong></p>
                 <p id="budget-food-balance-row"><span id="budget-food-balance-label">Осталось</span><strong><span id="budget-food-balance">0,00</span> ₸</strong></p>
               </div>
+              <div class="budget-progress" id="budget-food-progress" role="progressbar" aria-label="Использование лимита: Еда" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span class="budget-progress__bar" id="budget-food-progress-bar"></span>
+              </div>
+              <p class="budget-progress__label" id="budget-food-progress-label">Использовано 0%</p>
             </div>
 
-            <div class="field budget-category">
+            <div class="field budget-category budget-category--transport">
               <label for="budget-transport">Транспорт</label>
               <div class="amount-field">
                 <input id="budget-transport" name="transport" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-transport-error" required>
@@ -131,9 +135,13 @@
                 <p><span>Потрачено</span><strong><span id="budget-transport-spent">0,00</span> ₸</strong></p>
                 <p id="budget-transport-balance-row"><span id="budget-transport-balance-label">Осталось</span><strong><span id="budget-transport-balance">0,00</span> ₸</strong></p>
               </div>
+              <div class="budget-progress" id="budget-transport-progress" role="progressbar" aria-label="Использование лимита: Транспорт" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span class="budget-progress__bar" id="budget-transport-progress-bar"></span>
+              </div>
+              <p class="budget-progress__label" id="budget-transport-progress-label">Использовано 0%</p>
             </div>
 
-            <div class="field budget-category">
+            <div class="field budget-category budget-category--home">
               <label for="budget-home">Дом</label>
               <div class="amount-field">
                 <input id="budget-home" name="home" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-home-error" required>
@@ -144,9 +152,13 @@
                 <p><span>Потрачено</span><strong><span id="budget-home-spent">0,00</span> ₸</strong></p>
                 <p id="budget-home-balance-row"><span id="budget-home-balance-label">Осталось</span><strong><span id="budget-home-balance">0,00</span> ₸</strong></p>
               </div>
+              <div class="budget-progress" id="budget-home-progress" role="progressbar" aria-label="Использование лимита: Дом" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span class="budget-progress__bar" id="budget-home-progress-bar"></span>
+              </div>
+              <p class="budget-progress__label" id="budget-home-progress-label">Использовано 0%</p>
             </div>
 
-            <div class="field budget-category">
+            <div class="field budget-category budget-category--other">
               <label for="budget-other">Другое</label>
               <div class="amount-field">
                 <input id="budget-other" name="other" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="budget-other-error" required>
@@ -157,12 +169,40 @@
                 <p><span>Потрачено</span><strong><span id="budget-other-spent">0,00</span> ₸</strong></p>
                 <p id="budget-other-balance-row"><span id="budget-other-balance-label">Осталось</span><strong><span id="budget-other-balance">0,00</span> ₸</strong></p>
               </div>
+              <div class="budget-progress" id="budget-other-progress" role="progressbar" aria-label="Использование лимита: Другое" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span class="budget-progress__bar" id="budget-other-progress-bar"></span>
+              </div>
+              <p class="budget-progress__label" id="budget-other-progress-label">Использовано 0%</p>
             </div>
           </div>
 
           <p class="form-message" id="budget-message" role="status" aria-live="polite"></p>
           <button class="primary-button" type="submit">Сохранить лимиты</button>
         </form>
+      </section>
+
+      <section class="card category-analytics" aria-labelledby="category-analytics-title">
+        <h2 id="category-analytics-title">Расходы по категориям</h2>
+        <p class="category-analytics__hint">Текущий месяц</p>
+        <p class="category-analytics__empty" id="category-analytics-empty">В этом месяце трат пока нет.</p>
+        <div class="category-analytics__list" id="category-analytics-list">
+          <div class="category-analytics__item category-analytics__item--food">
+            <p><strong>Еда</strong><span><span id="analytics-food-amount">0,00</span> ₸ · <span id="analytics-food-percent">0</span>%</span></p>
+            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-food-bar"></span></div>
+          </div>
+          <div class="category-analytics__item category-analytics__item--transport">
+            <p><strong>Транспорт</strong><span><span id="analytics-transport-amount">0,00</span> ₸ · <span id="analytics-transport-percent">0</span>%</span></p>
+            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-transport-bar"></span></div>
+          </div>
+          <div class="category-analytics__item category-analytics__item--home">
+            <p><strong>Дом</strong><span><span id="analytics-home-amount">0,00</span> ₸ · <span id="analytics-home-percent">0</span>%</span></p>
+            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-home-bar"></span></div>
+          </div>
+          <div class="category-analytics__item category-analytics__item--other">
+            <p><strong>Другое</strong><span><span id="analytics-other-amount">0,00</span> ₸ · <span id="analytics-other-percent">0</span>%</span></p>
+            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-other-bar"></span></div>
+          </div>
+        </div>
       </section>
 
       <section class="card monthly-report" aria-labelledby="monthly-report-title">

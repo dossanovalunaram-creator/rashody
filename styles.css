@@ -295,10 +295,24 @@ select[aria-invalid="true"] {
 }
 
 .budget-category {
+  --category-color: #2f7d65;
   padding: 16px;
   border: 1px solid #e0e5e8;
+  border-top: 4px solid var(--category-color);
   border-radius: 14px;
   background: #fff;
+}
+
+.budget-category--transport {
+  --category-color: #3478b9;
+}
+
+.budget-category--home {
+  --category-color: #7957a8;
+}
+
+.budget-category--other {
+  --category-color: #b7791f;
 }
 
 .budget-category__status {
@@ -327,6 +341,105 @@ select[aria-invalid="true"] {
 .budget-category__status .is-over-budget strong {
   color: #b42318;
   font-weight: 750;
+}
+
+.budget-progress {
+  height: 10px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8ecea;
+}
+
+.budget-progress__bar {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--category-color);
+  transition: width 180ms ease;
+}
+
+.budget-progress.is-warning .budget-progress__bar {
+  background: #c47a16;
+}
+
+.budget-progress.is-over-budget .budget-progress__bar {
+  background: #b42318;
+}
+
+.budget-progress__label {
+  margin: 6px 0 0;
+  color: #6b7781;
+  font-size: 0.78rem;
+}
+
+.category-analytics {
+  margin-top: 28px;
+}
+
+.category-analytics__hint {
+  margin: 6px 0 0;
+  color: #6b7781;
+  font-size: 0.9rem;
+}
+
+.category-analytics__empty {
+  margin: 20px 0 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f4f7f5;
+  color: #587168;
+}
+
+.category-analytics__list {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.category-analytics__item {
+  --category-color: #2f7d65;
+}
+
+.category-analytics__item--transport {
+  --category-color: #3478b9;
+}
+
+.category-analytics__item--home {
+  --category-color: #7957a8;
+}
+
+.category-analytics__item--other {
+  --category-color: #b7791f;
+}
+
+.category-analytics__item p {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 7px;
+  color: #43515b;
+}
+
+.category-analytics__item p > span {
+  text-align: right;
+}
+
+.category-analytics__track {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8ecea;
+}
+
+.category-analytics__track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--category-color);
+  transition: width 180ms ease;
 }
 
 .monthly-report {
@@ -721,6 +834,16 @@ select[aria-invalid="true"] {
   .budget-category__status strong {
     max-width: 100%;
     white-space: normal;
+  }
+
+  .category-analytics__item p {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .category-analytics__item p > span {
+    text-align: left;
   }
 
   .summary {
