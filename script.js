@@ -112,8 +112,13 @@ budgetForm.addEventListener("submit", (event) => {
     return;
   }
 
+  if (!saveBudget(nextBudget)) {
+    budgetMessage.textContent = "Лимиты не сохранены. Разрешите браузеру хранить данные и попробуйте снова.";
+    budgetMessage.classList.add("is-error");
+    return;
+  }
+
   budget = nextBudget;
-  saveBudget();
   renderBudgetTotal();
   renderOverview();
   renderBudgetStatus();
@@ -712,11 +717,13 @@ function loadBudget() {
   }
 }
 
-function saveBudget() {
+function saveBudget(nextBudget = budget) {
   try {
-    localStorage.setItem(BUDGET_STORAGE_KEY, JSON.stringify(budget));
+    localStorage.setItem(BUDGET_STORAGE_KEY, JSON.stringify(nextBudget));
+    return true;
   } catch (error) {
     showStorageWarning();
+    return false;
   }
 }
 
