@@ -16,6 +16,8 @@
         <p class="subtitle">Добавляйте траты — данные останутся только на этом устройстве.</p>
       </header>
 
+      <div class="desktop-layout">
+        <div class="desktop-layout__main">
       <section class="overview" aria-label="Главные показатели текущего месяца">
         <article class="overview-card card">
           <p class="overview-card__label">Потрачено</p>
@@ -32,6 +34,9 @@
           <p class="overview-card__amount"><span id="overview-balance">0,00</span> ₸</p>
         </article>
       </section>
+        </div>
+
+        <aside class="desktop-layout__sidebar" aria-label="Добавление траты и настройка лимитов">
 
       <section class="card" aria-labelledby="form-title">
         <h2 id="form-title">Новая трата</h2>
@@ -210,6 +215,9 @@
         <p class="form-message" id="budget-message" role="status" aria-live="polite"></p>
       </section>
 
+        </aside>
+
+        <div class="desktop-layout__main desktop-layout__main--continuation">
       <section class="card category-analytics" aria-labelledby="category-analytics-title">
         <h2 id="category-analytics-title">Расходы по категориям</h2>
         <p class="category-analytics__hint">Текущий месяц</p>
@@ -286,6 +294,8 @@
         <ul class="expense-list" id="expense-list"></ul>
         <p class="empty-state" id="empty-state">Трат пока нет.</p>
       </section>
+        </div>
+      </div>
     </main>
 
     <script src="script.js"></script>
