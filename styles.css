@@ -414,6 +414,39 @@ select[aria-invalid="true"] {
   font-weight: 700;
 }
 
+.monthly-report__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.monthly-report__copy {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid #26715e;
+  border-radius: 10px;
+  background: #26715e;
+  color: #fff;
+  font-weight: 750;
+}
+
+.monthly-report__copy:hover {
+  background: #205f50;
+}
+
+.monthly-report__copy-message {
+  min-height: 1.4em;
+  margin: 0;
+  color: #26715e;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.monthly-report__copy-message.is-error {
+  color: #b42318;
+}
+
 .expenses-section {
   margin-top: 28px;
 }
@@ -656,6 +689,15 @@ select[aria-invalid="true"] {
   .monthly-report__list strong {
     grid-column: 2;
     white-space: normal;
+  }
+
+  .monthly-report__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .monthly-report__copy {
+    width: 100%;
   }
 
   .expense-item {

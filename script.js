@@ -30,6 +30,8 @@ const reportEmpty = document.querySelector("#report-empty");
 const reportPreviousMonth = document.querySelector("#report-previous-month");
 const reportPreviousTotal = document.querySelector("#report-previous-total");
 const reportDifference = document.querySelector("#report-difference");
+const copyReportButton = document.querySelector("#copy-report");
+const copyReportMessage = document.querySelector("#copy-report-message");
 const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
 const budgetForm = document.querySelector("#budget-form");
 const budgetInputs = Object.fromEntries(BUDGET_FIELDS.map((field) => [
@@ -169,6 +171,19 @@ for (const button of filterButtons) {
   });
 }
 
+copyReportButton.addEventListener("click", async () => {
+  copyReportMessage.textContent = "";
+  copyReportMessage.classList.remove("is-error");
+
+  try {
+    await copyReportText(buildMonthlyReportText());
+    copyReportMessage.textContent = "Отчёт скопирован";
+  } catch (error) {
+    copyReportMessage.textContent = "Не удалось скопировать отчёт";
+    copyReportMessage.classList.add("is-error");
+  }
+});
+
 function render() {
   renderMonthTotal();
   renderMonthlyReport();
@@ -281,6 +296,47 @@ function formatMonthlyDifference(currentTotalCents, previousTotalCents) {
   const percentageSign = differenceCents > 0n ? "+" : "−";
 
   return `На ${formatBigIntAmount(absoluteDifferenceCents)} ₸ ${direction} прошлого месяца (${percentageSign}${percentage}%).`;
+}
+
+function buildMonthlyReportText() {
+  const categoryLines = Array.from(reportTopCategories.children, (item, index) => {
+    const category = item.querySelector("span").textContent;
+    const amount = item.querySelector("strong").textContent;
+    return `${index + 1}. ${category} — ${amount}`;
+  });
+  const comparison = reportDifference.textContent.replace(/\.$/, "");
+  const comparisonText = comparison.charAt(0).toLocaleLowerCase("ru-RU") + comparison.slice(1);
+
+  return [
+    `Отчёт за ${reportMonth.textContent}`,
+    `Итого: ${reportTotal.textContent} ₸`,
+    "Топ категорий:",
+    ...(categoryLines.length > 0 ? categoryLines : ["Нет расходов"]),
+    `Сравнение: ${comparisonText}`
+  ].join("\n");
+}
+
+async function copyReportText(text) {
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  document.body.append(textArea);
+  textArea.select();
+
+  try {
+    if (!document.execCommand("copy")) {
+      throw new Error("Copy command failed");
+    }
+  } finally {
+    textArea.remove();
+  }
 }
 
 function fillBudgetForm() {
