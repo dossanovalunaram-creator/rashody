@@ -72,9 +72,54 @@ h3 {
 
 .subtitle {
   max-width: 560px;
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   color: #5f6b76;
   line-height: 1.55;
+}
+
+.page__month {
+  margin: 10px 0 0;
+  color: #26715e;
+  font-size: 0.92rem;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.overview-card {
+  min-width: 0;
+  padding: 20px;
+}
+
+.overview-card__label {
+  margin: 0;
+  color: #587168;
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.overview-card__amount {
+  margin: 8px 0 0;
+  color: #164f40;
+  font-size: clamp(1.15rem, 3.4vw, 1.55rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.overview-card.is-over-budget {
+  border-color: #e8b7b1;
+  background: #fff4f2;
+}
+
+.overview-card.is-over-budget .overview-card__label,
+.overview-card.is-over-budget .overview-card__amount {
+  color: #b42318;
 }
 
 .card {
@@ -615,6 +660,19 @@ select[aria-invalid="true"] {
 
   section.card {
     padding: 19px;
+  }
+
+  .overview {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .overview-card {
+    padding: 17px 19px;
+  }
+
+  .overview-card__amount {
+    font-size: 1.45rem;
   }
 
   .form-grid {

@@ -22,6 +22,10 @@ const expenseList = document.querySelector("#expense-list");
 const emptyState = document.querySelector("#empty-state");
 const monthTotal = document.querySelector("#month-total");
 const currentMonth = document.querySelector("#current-month");
+const overviewBudget = document.querySelector("#overview-budget");
+const overviewBalance = document.querySelector("#overview-balance");
+const overviewBalanceLabel = document.querySelector("#overview-balance-label");
+const overviewBalanceCard = document.querySelector("#overview-balance-card");
 const storageWarning = document.querySelector("#storage-warning");
 const reportMonth = document.querySelector("#report-month");
 const reportTotal = document.querySelector("#report-total");
@@ -95,6 +99,7 @@ budgetForm.addEventListener("submit", (event) => {
   budget = nextBudget;
   saveBudget();
   renderBudgetTotal();
+  renderOverview();
   renderBudgetStatus();
   budgetMessage.textContent = "Лимиты сохранены.";
 });
@@ -185,17 +190,17 @@ copyReportButton.addEventListener("click", async () => {
 });
 
 function render() {
-  renderMonthTotal();
+  renderOverview();
   renderMonthlyReport();
   renderBudgetStatus();
   renderList();
 }
 
-function renderMonthTotal() {
+function renderOverview() {
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonthIndex = now.getMonth();
-  const totalCents = expenses.reduce((total, expense) => {
+  const spentCents = expenses.reduce((total, expense) => {
     const expenseDate = parseLocalDate(expense.date);
 
     if (
@@ -208,8 +213,17 @@ function renderMonthTotal() {
 
     return total;
   }, 0n);
+  const budgetCents = BUDGET_FIELDS.reduce((total, field) => {
+    return total + BigInt(budget[field] || 0);
+  }, 0n);
+  const balanceCents = budgetCents - spentCents;
+  const isOverBudget = balanceCents < 0n;
 
-  monthTotal.textContent = formatBigIntAmount(totalCents);
+  monthTotal.textContent = formatBigIntAmount(spentCents);
+  overviewBudget.textContent = formatBigIntAmount(budgetCents);
+  overviewBalance.textContent = formatBigIntAmount(isOverBudget ? -balanceCents : balanceCents);
+  overviewBalanceLabel.textContent = isOverBudget ? "Перерасход" : "Осталось";
+  overviewBalanceCard.classList.toggle("is-over-budget", isOverBudget);
 }
 
 function renderMonthlyReport() {

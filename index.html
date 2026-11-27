@@ -12,8 +12,26 @@
       <header class="page__header">
         <p class="eyebrow">Личный бюджет</p>
         <h1>Мои расходы</h1>
+        <p class="page__month" id="current-month"></p>
         <p class="subtitle">Добавляйте траты — данные останутся только на этом устройстве.</p>
       </header>
+
+      <section class="overview" aria-label="Главные показатели текущего месяца">
+        <article class="overview-card card">
+          <p class="overview-card__label">Потрачено</p>
+          <p class="overview-card__amount"><span id="month-total">0,00</span> ₸</p>
+        </article>
+
+        <article class="overview-card card">
+          <p class="overview-card__label">Бюджет</p>
+          <p class="overview-card__amount"><span id="overview-budget">0,00</span> ₸</p>
+        </article>
+
+        <article class="overview-card card" id="overview-balance-card">
+          <p class="overview-card__label" id="overview-balance-label">Осталось</p>
+          <p class="overview-card__amount"><span id="overview-balance">0,00</span> ₸</p>
+        </article>
+      </section>
 
       <section class="card" aria-labelledby="form-title">
         <h2 id="form-title">Новая трата</h2>
@@ -182,14 +200,6 @@
       </section>
 
       <section class="expenses-section" aria-labelledby="expenses-title">
-        <div class="summary card">
-          <div>
-            <p class="summary__label">За текущий месяц</p>
-            <p class="summary__month" id="current-month"></p>
-          </div>
-          <p class="summary__amount"><span id="month-total">0,00</span> ₸</p>
-        </div>
-
         <div class="list-header">
           <h2 id="expenses-title">Список трат</h2>
           <div class="period-filter" aria-label="Показать траты за период">
