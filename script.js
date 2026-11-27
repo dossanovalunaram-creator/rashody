@@ -38,6 +38,7 @@ const copyReportButton = document.querySelector("#copy-report");
 const copyReportMessage = document.querySelector("#copy-report-message");
 const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
 const budgetForm = document.querySelector("#budget-form");
+const budgetSettings = document.querySelector("#budget-settings");
 const budgetInputs = Object.fromEntries(BUDGET_FIELDS.map((field) => [
   field,
   document.querySelector(`#budget-${field}`)
@@ -47,6 +48,7 @@ const budgetTotal = document.querySelector("#budget-total");
 const budgetStatus = Object.fromEntries(BUDGET_FIELDS.map((field) => [
   field,
   {
+    limit: document.querySelector(`#budget-${field}-limit`),
     spent: document.querySelector(`#budget-${field}-spent`),
     balance: document.querySelector(`#budget-${field}-balance`),
     balanceLabel: document.querySelector(`#budget-${field}-balance-label`),
@@ -79,6 +81,7 @@ currentMonth.textContent = new Intl.DateTimeFormat("ru-RU", {
 reportMonth.textContent = currentMonth.textContent;
 
 fillBudgetForm();
+budgetSettings.open = !hasSavedBudget();
 renderBudgetTotal();
 render();
 
@@ -115,6 +118,7 @@ budgetForm.addEventListener("submit", (event) => {
   renderOverview();
   renderBudgetStatus();
   budgetMessage.textContent = "Лимиты сохранены.";
+  budgetSettings.open = false;
 });
 
 form.addEventListener("submit", (event) => {
@@ -398,6 +402,7 @@ function renderBudgetStatus() {
       : 0n;
     const cappedPercent = usedPercent > 100n ? 100 : Number(usedPercent);
 
+    status.limit.textContent = formatBigIntAmount(limitCents);
     status.spent.textContent = formatBigIntAmount(spentCents);
     status.balance.textContent = formatBigIntAmount(isOverBudget ? -balanceCents : balanceCents);
     status.balanceLabel.textContent = isOverBudget ? "Перерасход" : "Осталось";
@@ -408,6 +413,10 @@ function renderBudgetStatus() {
     status.progress.classList.toggle("is-over-budget", isOverBudget);
     status.progressLabel.textContent = `Использовано ${usedPercent}%`;
   }
+}
+
+function hasSavedBudget() {
+  return BUDGET_FIELDS.every((field) => Number.isSafeInteger(budget[field]) && budget[field] > 0);
 }
 
 function renderCategoryAnalytics() {
