@@ -63,8 +63,15 @@ const categoryAnalyticsList = document.querySelector("#category-analytics-list")
 const categoryAnalytics = Object.fromEntries(BUDGET_FIELDS.map((field) => [
   field,
   {
+    item: document.querySelector(`.category-analytics__item--${field}`),
     amount: document.querySelector(`#analytics-${field}-amount`),
+    limit: document.querySelector(`#analytics-${field}-limit`),
+    balance: document.querySelector(`#analytics-${field}-balance`),
+    balanceLabel: document.querySelector(`#analytics-${field}-balance-label`),
+    balanceRow: document.querySelector(`#analytics-${field}-balance-row`),
     percent: document.querySelector(`#analytics-${field}-percent`),
+    percentLabel: document.querySelector(`#analytics-${field}-percent-label`),
+    progress: document.querySelector(`#analytics-${field}-progress`),
     bar: document.querySelector(`#analytics-${field}-bar`)
   }
 ]));
@@ -433,13 +440,25 @@ function renderCategoryAnalytics() {
   for (const field of BUDGET_FIELDS) {
     const analytics = categoryAnalytics[field];
     const amountCents = spending[BUDGET_CATEGORIES[field]];
-    const percent = totalCents > 0n
-      ? (amountCents * 100n + totalCents / 2n) / totalCents
+    const limitCents = BigInt(budget[field] || 0);
+    const balanceCents = limitCents - amountCents;
+    const isOverBudget = balanceCents < 0n;
+    const usedPercent = limitCents > 0n
+      ? (amountCents * 100n + limitCents / 2n) / limitCents
       : 0n;
+    const cappedPercent = usedPercent > 100n ? 100 : Number(usedPercent);
 
     analytics.amount.textContent = formatBigIntAmount(amountCents);
-    analytics.percent.textContent = String(percent);
-    analytics.bar.style.width = `${Number(percent)}%`;
+    analytics.limit.textContent = formatBigIntAmount(limitCents);
+    analytics.balance.textContent = formatBigIntAmount(isOverBudget ? -balanceCents : balanceCents);
+    analytics.balanceLabel.textContent = isOverBudget ? "Перерасход" : "Осталось";
+    analytics.balanceRow.classList.toggle("is-over-budget", isOverBudget);
+    analytics.percent.textContent = String(usedPercent);
+    analytics.percentLabel.textContent = String(usedPercent);
+    analytics.bar.style.width = `${cappedPercent}%`;
+    analytics.progress.setAttribute("aria-valuenow", String(cappedPercent));
+    analytics.item.classList.toggle("is-warning", !isOverBudget && usedPercent >= 80n);
+    analytics.item.classList.toggle("is-over-budget", isOverBudget);
   }
 
   categoryAnalyticsEmpty.hidden = totalCents > 0n;

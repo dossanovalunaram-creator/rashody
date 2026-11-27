@@ -19,19 +19,22 @@
       <div class="desktop-layout">
         <div class="desktop-layout__main">
       <section class="overview" aria-label="Главные показатели текущего месяца">
-        <article class="overview-card card">
+        <article class="overview-card overview-card--spent card">
           <p class="overview-card__label">Потрачено</p>
           <p class="overview-card__amount"><span id="month-total">0,00</span> ₸</p>
+          <p class="overview-card__note">За текущий месяц</p>
         </article>
 
-        <article class="overview-card card">
+        <article class="overview-card overview-card--budget card">
           <p class="overview-card__label">Бюджет</p>
           <p class="overview-card__amount"><span id="overview-budget">0,00</span> ₸</p>
+          <p class="overview-card__note">Общий лимит</p>
         </article>
 
-        <article class="overview-card card" id="overview-balance-card">
+        <article class="overview-card overview-card--balance card" id="overview-balance-card">
           <p class="overview-card__label" id="overview-balance-label">Осталось</p>
           <p class="overview-card__amount"><span id="overview-balance">0,00</span> ₸</p>
+          <p class="overview-card__note">Доступно для трат</p>
         </article>
       </section>
         </div>
@@ -224,20 +227,56 @@
         <p class="category-analytics__empty" id="category-analytics-empty">В этом месяце трат пока нет.</p>
         <div class="category-analytics__list" id="category-analytics-list">
           <div class="category-analytics__item category-analytics__item--food">
-            <p><strong>Еда</strong><span><span id="analytics-food-amount">0,00</span> ₸ · <span id="analytics-food-percent">0</span>%</span></p>
-            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-food-bar"></span></div>
+            <div class="category-analytics__header">
+              <strong>Еда</strong>
+              <span class="category-analytics__percent"><span id="analytics-food-percent">0</span>%</span>
+            </div>
+            <div class="category-analytics__metrics">
+              <p><span>Потрачено</span><strong><span id="analytics-food-amount">0,00</span> ₸</strong></p>
+              <p><span>Лимит</span><strong><span id="analytics-food-limit">0,00</span> ₸</strong></p>
+              <p id="analytics-food-balance-row"><span id="analytics-food-balance-label">Осталось</span><strong><span id="analytics-food-balance">0,00</span> ₸</strong></p>
+            </div>
+            <div class="category-analytics__track" id="analytics-food-progress" role="progressbar" aria-label="Использование лимита: Еда" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="analytics-food-bar"></span></div>
+            <p class="category-analytics__progress-label">Использовано <span id="analytics-food-percent-label">0</span>%</p>
           </div>
           <div class="category-analytics__item category-analytics__item--transport">
-            <p><strong>Транспорт</strong><span><span id="analytics-transport-amount">0,00</span> ₸ · <span id="analytics-transport-percent">0</span>%</span></p>
-            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-transport-bar"></span></div>
+            <div class="category-analytics__header">
+              <strong>Транспорт</strong>
+              <span class="category-analytics__percent"><span id="analytics-transport-percent">0</span>%</span>
+            </div>
+            <div class="category-analytics__metrics">
+              <p><span>Потрачено</span><strong><span id="analytics-transport-amount">0,00</span> ₸</strong></p>
+              <p><span>Лимит</span><strong><span id="analytics-transport-limit">0,00</span> ₸</strong></p>
+              <p id="analytics-transport-balance-row"><span id="analytics-transport-balance-label">Осталось</span><strong><span id="analytics-transport-balance">0,00</span> ₸</strong></p>
+            </div>
+            <div class="category-analytics__track" id="analytics-transport-progress" role="progressbar" aria-label="Использование лимита: Транспорт" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="analytics-transport-bar"></span></div>
+            <p class="category-analytics__progress-label">Использовано <span id="analytics-transport-percent-label">0</span>%</p>
           </div>
           <div class="category-analytics__item category-analytics__item--home">
-            <p><strong>Дом</strong><span><span id="analytics-home-amount">0,00</span> ₸ · <span id="analytics-home-percent">0</span>%</span></p>
-            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-home-bar"></span></div>
+            <div class="category-analytics__header">
+              <strong>Дом</strong>
+              <span class="category-analytics__percent"><span id="analytics-home-percent">0</span>%</span>
+            </div>
+            <div class="category-analytics__metrics">
+              <p><span>Потрачено</span><strong><span id="analytics-home-amount">0,00</span> ₸</strong></p>
+              <p><span>Лимит</span><strong><span id="analytics-home-limit">0,00</span> ₸</strong></p>
+              <p id="analytics-home-balance-row"><span id="analytics-home-balance-label">Осталось</span><strong><span id="analytics-home-balance">0,00</span> ₸</strong></p>
+            </div>
+            <div class="category-analytics__track" id="analytics-home-progress" role="progressbar" aria-label="Использование лимита: Дом" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="analytics-home-bar"></span></div>
+            <p class="category-analytics__progress-label">Использовано <span id="analytics-home-percent-label">0</span>%</p>
           </div>
           <div class="category-analytics__item category-analytics__item--other">
-            <p><strong>Другое</strong><span><span id="analytics-other-amount">0,00</span> ₸ · <span id="analytics-other-percent">0</span>%</span></p>
-            <div class="category-analytics__track" aria-hidden="true"><span id="analytics-other-bar"></span></div>
+            <div class="category-analytics__header">
+              <strong>Другое</strong>
+              <span class="category-analytics__percent"><span id="analytics-other-percent">0</span>%</span>
+            </div>
+            <div class="category-analytics__metrics">
+              <p><span>Потрачено</span><strong><span id="analytics-other-amount">0,00</span> ₸</strong></p>
+              <p><span>Лимит</span><strong><span id="analytics-other-limit">0,00</span> ₸</strong></p>
+              <p id="analytics-other-balance-row"><span id="analytics-other-balance-label">Осталось</span><strong><span id="analytics-other-balance">0,00</span> ₸</strong></p>
+            </div>
+            <div class="category-analytics__track" id="analytics-other-progress" role="progressbar" aria-label="Использование лимита: Другое" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="analytics-other-bar"></span></div>
+            <p class="category-analytics__progress-label">Использовано <span id="analytics-other-percent-label">0</span>%</p>
           </div>
         </div>
       </section>
