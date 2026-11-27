@@ -525,8 +525,14 @@ function deleteExpense(expense) {
     return;
   }
 
-  expenses = expenses.filter((item) => item !== expense);
-  saveExpenses();
+  const nextExpenses = expenses.filter((item) => item !== expense);
+
+  if (!saveExpenses(nextExpenses)) {
+    storageWarning.textContent = "Трата не удалена. Разрешите браузеру хранить данные и попробуйте снова.";
+    return;
+  }
+
+  expenses = nextExpenses;
   render();
 }
 
